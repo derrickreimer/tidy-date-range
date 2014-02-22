@@ -1,0 +1,21 @@
+{
+  "name": "tidy-date-range",
+  "title": "Tidy Date Range",
+  "description": "A simple jQuery date range plugin",
+  "author": {
+    "name": "Derrick Reimer"
+  },
+  "version": "0.0.1",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/djreimer/tidy-date-range/blob/master/LICENSE.txt"
+    }
+  ],
+  "bugs": "https://github.com/djreimer/tidy-date-range/issues",
+  "homepage": "https://github.com/djreimer/tidy-date-range",
+  "docs": "https://github.com/djreimer/tidy-date-range",
+  "dependencies": {
+    "jquery": ">=1.5"
+  }
+}

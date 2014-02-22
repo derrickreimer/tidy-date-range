@@ -1,0 +1,206 @@
+body {
+  font-family: Helvetica, Arial, sans-serif; }
+
+.date-range-picker {
+  position: relative; }
+  .date-range-picker.open a.dropdown-toggle {
+    -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.18);
+    -moz-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.18);
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.18);
+    background: #dfebf5; }
+  .date-range-picker.open div.popover {
+    display: block; }
+  .date-range-picker a.dropdown-toggle {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    background: white;
+    background: -moz-linear-gradient(top, white 0%, #e9f2f8 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, white), color-stop(100%, #e9f2f8));
+    background: -webkit-linear-gradient(top, white 0%, #e9f2f8 100%);
+    background: -o-linear-gradient(top, white 0%, #e9f2f8 100%);
+    background: -ms-linear-gradient(top, white 0%, #e9f2f8 100%);
+    background: linear-gradient(to bottom, white 0%, #e9f2f8 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$from', endColorstr='#ffffff',GradientType=0 );
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+    display: inline-block;
+    position: relative;
+    padding: 8px 45px 8px 15px;
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 700;
+    border: 1px solid #bfbfbf;
+    border-bottom-color: #9c9c9c;
+    color: #444;
+    font-size: 14px;
+    cursor: pointer; }
+    .date-range-picker a.dropdown-toggle span.arrow {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 30px;
+      border-left: 1px solid #cfcfcf; }
+      .date-range-picker a.dropdown-toggle span.arrow::after {
+        content: "";
+        display: block;
+        position: absolute;
+        margin: -3px 0 0 0;
+        top: 50%;
+        left: 8px;
+        width: 0;
+        height: 0;
+        border-top: 6px solid #999;
+        border-bottom: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent; }
+  .date-range-picker div.popover {
+    -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.24);
+    -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.24);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.24);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    display: none;
+    position: absolute;
+    padding: 0 25px;
+    top: 45px;
+    right: 0;
+    width: 515px;
+    height: 285px;
+    border: 1px solid #c0c0c0;
+    border-bottom-color: #9c9c9c;
+    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.95);
+    z-index: 1000;
+    cursor: auto; }
+    .date-range-picker div.popover::before {
+      content: "";
+      display: block;
+      position: absolute;
+      margin: -3px 0 0 0;
+      top: -10px;
+      right: 35px;
+      width: 0;
+      height: 0;
+      border-bottom: 12px solid #a8a8a8;
+      border-top: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent; }
+    .date-range-picker div.popover::after {
+      content: "";
+      display: block;
+      position: absolute;
+      margin: -3px 0 0 0;
+      top: -9px;
+      right: 35px;
+      width: 0;
+      height: 0;
+      border-bottom: 12px solid #fff;
+      border-top: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent; }
+  .date-range-picker div.calendar-group {
+    height: 196px; }
+    .date-range-picker div.calendar-group:before, .date-range-picker div.calendar-group:after {
+      content: "";
+      display: table; }
+    .date-range-picker div.calendar-group:after {
+      clear: both; }
+    .date-range-picker div.calendar-group {
+      zoom: 1; }
+  .date-range-picker table.calendar {
+    float: left;
+    font-size: 11px;
+    margin: 15px;
+    color: #555; }
+    .date-range-picker table.calendar tr th {
+      font-weight: bold;
+      text-align: center;
+      vertical-align: middle;
+      border-bottom: 1px solid #e6e6e6;
+      background-color: #f8f8f8; }
+      .date-range-picker table.calendar tr th.month {
+        height: 28px;
+        font-size: 13px;
+        vertical-align: top;
+        background-color: #fff; }
+    .date-range-picker table.calendar tr td {
+      width: 20px;
+      height: 20px;
+      text-align: center;
+      vertical-align: middle; }
+    .date-range-picker table.calendar tr a {
+      display: block;
+      width: 19px;
+      height: 19px;
+      line-height: 19px; }
+      .date-range-picker table.calendar tr a.selected {
+        background-color: #4477bd;
+        color: #fff; }
+      .date-range-picker table.calendar tr a.disabled {
+        color: #ccc;
+        cursor: default; }
+  .date-range-picker a.range-button {
+    position: absolute;
+    top: 12px;
+    padding: 0;
+    font-size: 10px;
+    width: 22px;
+    height: 22px; }
+    .date-range-picker a.range-button::after {
+      content: "";
+      display: block;
+      position: absolute;
+      margin: -5px 0 0 0;
+      top: 50%;
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent; }
+    .date-range-picker a.range-button.previous {
+      left: 12px; }
+      .date-range-picker a.range-button.previous::after {
+        right: 8px;
+        border-right: 5px solid #999;
+        border-left: 0; }
+    .date-range-picker a.range-button.next {
+      right: 12px; }
+      .date-range-picker a.range-button.next::after {
+        left: 8px;
+        border-left: 5px solid #999;
+        border-right: 0; }
+  .date-range-picker div.controls {
+    margin: 0 15px;
+    padding: 15px 0;
+    border-top: 1px solid #e0e0e0; }
+    .date-range-picker div.controls:before, .date-range-picker div.controls:after {
+      content: "";
+      display: table; }
+    .date-range-picker div.controls:after {
+      clear: both; }
+    .date-range-picker div.controls {
+      zoom: 1; }
+    .date-range-picker div.controls div.range-inputs {
+      float: left; }
+      .date-range-picker div.controls div.range-inputs label {
+        display: block;
+        padding-bottom: 4px;
+        font-size: 13px;
+        color: #555; }
+      .date-range-picker div.controls div.range-inputs span.dash {
+        color: #999; }
+      .date-range-picker div.controls div.range-inputs input.date {
+        display: inline-block;
+        padding: 5px;
+        height: 30px;
+        width: 90px; }
+    .date-range-picker div.controls div.buttons {
+      padding-top: 24px;
+      float: right; }
