@@ -27,10 +27,6 @@
  * ===================================================================== */
 
 ;(function($, window, document, undefined) {
-  var defaults = {
-
-  }
-
   var Day = function(month, number) {
     this.month = month;
     this.number = number;
@@ -85,7 +81,7 @@
     }
 
   , toHuman: function() {
-      return Month.names[this.month.number - 1] + " " + this.number + ", " + this.month.year;
+      return Month.shortNames[this.month.number - 1] + " " + this.number + ", " + this.month.year;
     }
 
   , toSlashed: function() {
@@ -104,11 +100,20 @@
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
+  Month.shortNames = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+    'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'
+  ];
+
   Month.prototype = {
     constructor: Month
 
   , name: function() {
       return Month.names[this.number - 1] + " " + this.year;
+    }
+
+  , shortName: function() {
+      return Month.shortNames[this.number - 1] + " " + this.year;
     }
 
   , dayCount: function() {
@@ -256,12 +261,18 @@
   }
 
   var Control = function(parent, options) {
-    var that = this;
+    var that = this
+      , range;
+
     this.options = options || {};
 
+    range = new DateRange(
+      Day.fromString(this.options.from),
+      Day.fromString(this.options.to)
+    )
+
+    this.range = range.isValid() ? range : DateRange.default();
     this.calendars = [];
-    
-    this.range = DateRange.default();
     this.visibleMonth = this.range.to.month;
     this.isSelecting = false;
 
@@ -269,6 +280,8 @@
     this.$el = $("<div class='tdr-control'></div>");
     this.$dropdown = $("<a href='#' class='tdr-dropdown'></div>");
     this.$popover = $("<div class='tdr-popover'></div>");
+    this.$previous = $("<a href='#' class='tdr-shift-button previous'></a>");
+    this.$next = $("<a href='#' class='tdr-shift-button next'></a>");
     this.$calendars = $("<div class='tdr-calendars'></div>");
     this.$controls = $(
       "<div class='tdr-controls'>" +
@@ -279,13 +292,15 @@
           "<input type='text' name='to' value='' class='tdr-date' />" +
         "</div>" +
         "<div class='tdr-buttons'>" +
-          "<a href='#' class='tdr-button apply'>Apply</a>" +
+          "<a href='#' data-tidydaterange='apply' class='tdr-button'>Apply</a>" +
         "</div>" +
       "</div>"
     );
 
     this.$el.append(this.$dropdown);
     this.$el.append(this.$popover);
+    this.$popover.append(this.$previous);
+    this.$popover.append(this.$next);
     this.$popover.append(this.$calendars);
     this.$popover.append(this.$controls);
 
@@ -303,6 +318,22 @@
     });
 
     this.$parent.html(this.$el);
+
+    this.$previous.on("click", function() {
+      that.shiftPrevious();
+      return false;
+    });
+
+    this.$next.on("click", function() {
+      that.shiftNext();
+      return false;
+    });
+
+    this.$el.on("click", "[data-tidydaterange='apply']", function() {
+      that.$parent.trigger("apply");
+      return false;
+    });
+
     this.render();
   }
 
@@ -378,13 +409,11 @@
     }
 
   , shiftNext: function() {
-      if (!this.visibleMonth) return;
       this.setVisibleMonth(this.visibleMonth.next());
       return this;
     }
 
   , shiftPrevious: function() {
-      if (!this.visibleMonth) return;
       this.setVisibleMonth(this.visibleMonth.previous());
       return this;
     }
@@ -393,12 +422,6 @@
       return this.range;
     }
   }
-
-  window.Day = Day;
-  window.Month = Month;
-  window.Calendar = Calendar;
-  window.DateRange = DateRange;
-  window.Control = Control;
 
   $.fn.tidydaterange = function(options) {
     return this.each(function() {
