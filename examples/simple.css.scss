@@ -45,26 +45,29 @@
   }
 }
 
-body {
-  font-family: Helvetica, Arial, sans-serif;
-}
 
-.date-range-picker {
+.tdr-control {
+  float: right;
   position: relative;
+  font-family: Helvetica, Arial, sans-serif;
+
+  a {
+    text-decoration: none;
+  }
   
   &.open {
     
-    a.dropdown-toggle {
+    .tdr-dropdown {
       @include box-shadow(inset 0 0 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.18));
       background: #dfebf5;
     }
     
-    div.popover {
+    .tdr-popover {
       display: block;
     }
   }
   
-  a.dropdown-toggle {
+  .tdr-dropdown {
     @include border-radius(3px);
     @include box-sizing(border-box);
     @include gradient(#ffffff, #e9f2f8);
@@ -106,7 +109,7 @@ body {
     }
   }
   
-  div.popover {
+  .tdr-popover {
     @include box-shadow(0 1px 6px rgba(0,0,0,0.24));
     @include border-radius(3px);
     display: none;
@@ -154,19 +157,24 @@ body {
     }
   }
   
-  div.calendar-group {
+  .tdr-calendars {
     @include clearfix;
     height: 196px;
   }
   
-  table.calendar {
+  .tdr-calendar {
     float: left;
     font-size: 11px;
     margin: 15px;
     color: #555;
+    border-collapse: separate;
+    border-spacing: 0;
     
     tr {
-      
+      margin: 0;
+      padding: 0;
+      border: 0;
+
       th {
         font-weight: bold;
         text-align: center;
@@ -183,6 +191,9 @@ body {
       }
       
       td {
+        margin: 0;
+        padding: 0;
+        border: 0;
         width: 20px;
         height: 20px;
         text-align: center;
@@ -208,7 +219,7 @@ body {
     }
   }
   
-  a.range-button {
+  .tdr-shift-button {
     position: absolute;
     top: 12px;
     padding: 0;
@@ -249,37 +260,72 @@ body {
     }
   }
   
-  div.controls {
+  .tdr-controls {
     @include clearfix;
     margin: 0 15px;
     padding: 15px 0;
     border-top: 1px solid #e0e0e0;
+  }
+
+  .tdr-range-inputs {
+    float: left;
     
-    div.range-inputs {
-      float: left;
-      
-      label {
-        display: block;
-        padding-bottom: 4px;
-        font-size: 13px;
-        color: #555;
-      }
-      
-      span.dash {
-        color: #999;
-      }
-      
-      input.date {
-        display: inline-block;
-        padding: 5px;
-        height: 30px;
-        width: 90px;
-      }
+    label {
+      display: block;
+      padding-bottom: 4px;
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: bold;
+      color: #555;
     }
     
-    div.buttons {
-      padding-top: 24px;
-      float: right;
+    .tdr-dash {
+      margin: 0 2px;
+      color: #999;
+    }
+    
+    .tdr-date {
+      @include box-shadow(inset 0 0 3px rgba(0,0,0,0.16));
+      @include border-radius(3px);
+      @include box-sizing(border-box);
+      font-family: Helvetica, Arial, sans-serif;
+      display: inline-block;
+      padding: 5px;
+      height: 30px;
+      width: 90px;
+      font-size: 14px;
+      border: 1px solid #c4c4c4;
+      line-height: 1.5;
+      position: relative;
+    }
+  }
+  
+  .tdr-buttons {
+    padding-top: 24px;
+    float: right;
+  }
+
+  .tdr-button {
+    @include border-radius(3px);
+    @include box-sizing(border-box);
+    display: inline-block;
+    position: relative;
+    margin: 0;
+    padding: 4px 10px;
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 700;
+    cursor: pointer;
+
+    @include gradient(#e2e6e9, #c5cacd);
+    @include box-shadow(0 1px 2px rgba(0,0,0,0.18));
+    border: 1px solid #9b9b9b;
+    border-bottom-color: #747474;
+    color: #333;
+    
+    &:active, &.depressed {
+      @include box-shadow(inset 0 0 4px rgba(0,0,0,0.15), 0 1px 2px rgba(0,0,0,0.18));
+      background: #bec3c7;
     }
   }
 }

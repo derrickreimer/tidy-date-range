@@ -27,34 +27,93 @@
  * ===================================================================== */
 
 ;(function($, window, document, undefined) {
-  var pad = function(s) {
+  var defaults = {
+
+  }
+
+  var Day = function(month, number) {
+    this.month = month;
+    this.number = number;
+  }
+
+  Day.pad = function(s) {
     return ("0" + s).slice(-2);
   }
 
-  var Calendar = function(year, month, selectedRange) {
-    this.year = year;
-    this.month = month;
-    this.selectedRange = selectedRange;
-    this.dayCounts = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    this.names = ['January', 'February', 'March', 'April', 'May', 'June', 
-      'July', 'August', 'September', 'October', 'November', 'December'];
-    this.$el = $("<table class='tdr-calendar'></table>");
+  Day.fromString = function(str) {
+    if (str == "" || str == undefined) return undefined;
+
+    var parts = str.split("-");
+    var year = parseInt(parts[0]);
+    var month = parseInt(parts[1]);
+    var day = parseInt(parts[2]);
+
+    if (isNaN(year) || isNaN(month) || isNaN(day)) return undefined;
+    return new Day(new Month(year, month), day);
   }
 
-  Calendar.prototype = {
-    constructor: Calendar
+  Day.fromDate = function(date) {
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    return new Day(new Month(year, month), day);
+  }
 
-  , firstDay: function() {
-      return new Date(this.year, this.month - 1, 1);
+  Day.now = function() {
+    return Day.fromDate(new Date());
+  }
+
+  Day.prototype = {
+    constructor: Day
+
+  , daysFromNow: function(days) {
+      var date = this.toDate();
+      var time = date.getTime();
+      newTime = time + (days * 86400000);
+      return Day.fromDate(new Date(newTime));
     }
 
-  , firstDow: function() {
-      return this.firstDay().getDay();
+  , toDate: function() {
+      return new Date(this.month.year, this.month.number - 1, this.number);
+    }
+
+  , toString: function() {
+      var year = this.month.year;
+      var month = Day.pad(this.month.number);
+      var day = Day.pad(this.number);
+      return [year, month, day].join("-");
+    }
+
+  , toHuman: function() {
+      return Month.names[this.month.number - 1] + " " + this.number + ", " + this.month.year;
+    }
+
+  , toSlashed: function() {
+      return [this.month.number, this.number, this.month.year].join("/");
+    }
+  }
+
+  var Month = function(year, number) {
+    this.year = year;
+    this.number = number;
+    this.dayCounts = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  }
+
+  Month.names = [
+    'January', 'February', 'March', 'April', 'May', 'June', 
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  Month.prototype = {
+    constructor: Month
+
+  , name: function() {
+      return Month.names[this.number - 1] + " " + this.year;
     }
 
   , dayCount: function() {
-      if (this.month == 2 && this.isLeapYear()) return 29;
-      return this.dayCounts[this.month - 1];
+      if (this.number == 2 && this.isLeapYear()) return 29;
+      return this.dayCounts[this.number - 1];
     }
 
   , isLeapYear: function() {
@@ -65,8 +124,60 @@
       );
     }
 
-  , name: function() {
-      return this.names[this.month - 1] + " " + this.year;
+  , firstDay: function() {
+      return new Date(this.year, this.number - 1, 1);
+    }
+
+  , firstDayOfTheWeek: function() {
+      return this.firstDay().getDay();
+    }
+
+  , previous: function() {
+      if (this.number == 1) {
+        return new Month(this.year - 1, 12);
+      } else {
+        return new Month(this.year, this.number - 1);
+      }
+    }
+
+  , next: function() {
+      if (this.number == 12) {
+        return new Month(this.year + 1, 1);
+      } else {
+        return new Month(this.year, this.number + 1);
+      }
+    }
+  }
+
+  var Calendar = function(month) {
+    this.month = month;
+    this.$el = $("<table class='tdr-calendar'></table>");
+  }
+
+  Calendar.prototype = {
+    constructor: Calendar
+
+  , applyRange: function(range, isSelecting) {
+      var now = Day.now().toDate();
+
+      this.$el.find("[data-date]").each(function(index) {
+        var $this = $(this);
+        var day = Day.fromString($this.data("date"))
+
+        if (range.includes(day)) {
+          $this.addClass("selected");
+        } else {
+          $this.removeClass("selected");
+        }
+
+        var date = day.toDate()
+
+        if (date > now || (isSelecting && date < range.from.toDate())) {
+          $this.addClass("disabled");
+        } else {
+          $this.removeClass("disabled");
+        }
+      })
     }
 
   , render: function() {
@@ -80,9 +191,9 @@
         // Loop over days of the week
         for (var j = 0; j <= 6; j++) {
           weeks += "<td>";
-          date = this.year + "-" + pad(this.month) + "-" + pad(day);
+          date = this.month.year + "-" + Day.pad(this.month.number) + "-" + Day.pad(day);
 
-          if (day <= this.dayCount() && (i > 0 || j >= this.firstDow())) {
+          if (day <= this.month.dayCount() && (i > 0 || j >= this.month.firstDayOfTheWeek())) {
             weeks += "<a href='#' data-date='"+ date + "'>" + day + "</a>";
             day++;
           }
@@ -91,7 +202,7 @@
         }
 
         // Stop if we are out of days
-        if (day > this.dayCount()) {
+        if (day > this.month.dayCount()) {
           break;
         } else {
           weeks += "</tr><tr>";
@@ -101,100 +212,200 @@
       weeks += "</tr>";
 
       chrome += "<thead>";
-      chrome += "<tr><th class='month' colspan='7'>" + this.name() + "</th></tr>"
+      chrome += "<tr><th class='month' colspan='7'>" + this.month.name() + "</th></tr>"
       chrome += "<tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr>";
       chrome += "</thead>";
       chrome += "<tbody>" + weeks + "</tbody>";
 
       this.$el.html(chrome);
     }
+
+  , onSelect: function(handler) {
+      this.$el.on("click", "a[data-date]:not(.disabled)", function() {
+        var day = Day.fromString($(this).data("date"));
+        handler(day);
+        return false;
+      });
+    }
   }
 
-  // Public: Constructs a new date range.
-  //
-  // from - A String of the form "2014-02-04" 
-  //        marking the start of the range.
-  // to   - A String of the form "2014-02-04"
-  //        marking the end of the range.
-  //
-  // Returns nothing.
   var DateRange = function(from, to) {
-    this.setFrom(from);
-    this.setTo(to);
+    this.from = from;
+    this.to = to;
+  }
+
+  DateRange.default = function() {
+    var now = Day.now();
+    return new DateRange(now.daysFromNow(-30), now);
   }
 
   DateRange.prototype = {
     constructor: DateRange
 
-  , setFrom: function(str) {
-      this.__from = this.parseDate(str);
-    }
-
-  , setTo: function(str) {
-      this.__to = this.parseDate(str);
-    }
-
-  , getFrom: function() {
-      return this.__from;
-    }
-
-  , getTo: function() {
-      return this.__to;
-    }
-
-  , now: function() {
-      var date = new Date();
-      var year = date.getFullYear();
-      var month = pad(date.getMonth() + 1);
-      var day = pad(date.getDate());
-      return [year, month, day].join("-");
-    }
-
-  , parseDate: function(date) {
-      if (date == "" || date == undefined) return undefined;
-
-      var parts = date.split("-");
-      var year = parseInt(parts[0]);
-      var month = parseInt(parts[1]);
-      var day = parseInt(parts[2]);
-
-      if (isNaN(year) || isNaN(month) || isNaN(day)) {
-        return undefined;
-      }
-
-      return [year, month, day];
-    }
-
-  , arrayToDate: function(arr) {
-      return new Date(arr[0], arr[1] - 1, arr[2]);
-    }
-
   , isValid: function() {
-      var from = this.getFrom(), to = this.getTo();
-      if (from == undefined || to == undefined) return false;
-      if (this.arrayToDate(from) > this.arrayToDate(to)) return false;
+      if (this.from == undefined || this.to == undefined) return false;
+      if (this.from.toDate() > this.to.toDate()) return false;
       return true;
     }
 
-  , includes: function(str) {
+  , includes: function(day) {
       if (!this.isValid()) return false;
-
-      var dateArray = this.parseDate(str);
-      if (dateArray == undefined) return false;
-
-      var date = this.arrayToDate(dateArray);
-      var from = this.arrayToDate(this.getFrom());
-      var to = this.arrayToDate(this.getTo());
-      return (from <= date && to >= date);
+      var date = day.toDate();
+      return (this.from.toDate() <= date && this.to.toDate() >= date);
     }
   }
 
+  var Control = function(parent, options) {
+    var that = this;
+    this.options = options || {};
+
+    this.calendars = [];
+    
+    this.range = DateRange.default();
+    this.visibleMonth = this.range.to.month;
+    this.isSelecting = false;
+
+    this.$parent = $(parent);
+    this.$el = $("<div class='tdr-control'></div>");
+    this.$dropdown = $("<a href='#' class='tdr-dropdown'></div>");
+    this.$popover = $("<div class='tdr-popover'></div>");
+    this.$calendars = $("<div class='tdr-calendars'></div>");
+    this.$controls = $(
+      "<div class='tdr-controls'>" +
+        "<div class='tdr-range-inputs'>" +
+          "<label>Date Range</label>" +
+          "<input type='text' name='from' value='' class='tdr-date' />" +
+          "<span class='tdr-dash'>&mdash;</span>" +
+          "<input type='text' name='to' value='' class='tdr-date' />" +
+        "</div>" +
+        "<div class='tdr-buttons'>" +
+          "<a href='#' class='tdr-button apply'>Apply</a>" +
+        "</div>" +
+      "</div>"
+    );
+
+    this.$el.append(this.$dropdown);
+    this.$el.append(this.$popover);
+    this.$popover.append(this.$calendars);
+    this.$popover.append(this.$controls);
+
+    this.$dropdown.on("click", function() {
+      that.$el.toggleClass("open");
+      return false;
+    });
+
+    $("html").on("click.tidydaterange", function() {
+      that.$el.removeClass("open");
+    });
+
+    $("body").on("click.tidydaterange", ".tdr-popover", function(e) { 
+      e.stopPropagation();
+    });
+
+    this.$parent.html(this.$el);
+    this.render();
+  }
+
+  Control.prototype = {
+    constructor: Control
+
+  , renderCalendars: function() {
+      var that = this
+        , c3 = new Calendar(this.visibleMonth)
+        , c2 = new Calendar(c3.month.previous())
+        , c1 = new Calendar(c2.month.previous());
+
+      // Define calendar set
+      this.calendars = [c1, c2, c3];
+
+      // Render the calendars
+      for (var i = 0; i < this.calendars.length; i++) {
+        this.calendars[i].render();
+      }
+
+      var that = this;
+
+      // Bind events
+      $.each(this.calendars, function(index) {
+        this.onSelect(function(day) {
+          that.range.to = day;
+
+          if (that.isSelecting) {
+            that.isSelecting = false;
+          } else {
+            that.range.from = day;
+            that.isSelecting = true;
+          }
+
+          that.render();
+        })
+      });
+
+      // Place rendered calendars on the DOM
+      this.$calendars.html("");
+      for (var i = 0; i < this.calendars.length; i++) {
+        this.$calendars.append(this.calendars[i].$el);
+      }
+    }
+
+  , applyRange: function(range) {
+      // Update calendars
+      for (var i = 0; i < this.calendars.length; i++) {
+        this.calendars[i].applyRange(this.range, this.isSelecting);
+      }
+
+      // Update dropdown label
+      this.$dropdown.html(
+        "<span class='label'>" + 
+          this.range.from.toHuman() + " &mdash; " + this.range.to.toHuman() +
+        "</span><span class='arrow'></span>"
+      );
+    }
+
+  , render: function() {
+      this.renderCalendars();
+      this.applyRange();
+      this.$parent.data("from", this.range.from.toString());
+      this.$parent.data("to", this.range.to.toString());
+      this.$controls.find("input[name='from']").val(this.range.from.toSlashed());
+      this.$controls.find("input[name='to']").val(this.range.to.toSlashed());
+      return this;
+    }
+
+  , setVisibleMonth: function(month) {
+      this.visibleMonth = month;
+      this.render();
+    }
+
+  , shiftNext: function() {
+      if (!this.visibleMonth) return;
+      this.setVisibleMonth(this.visibleMonth.next());
+      return this;
+    }
+
+  , shiftPrevious: function() {
+      if (!this.visibleMonth) return;
+      this.setVisibleMonth(this.visibleMonth.previous());
+      return this;
+    }
+
+  , getRange: function() {
+      return this.range;
+    }
+  }
+
+  window.Day = Day;
+  window.Month = Month;
   window.Calendar = Calendar;
   window.DateRange = DateRange;
+  window.Control = Control;
 
   $.fn.tidydaterange = function(options) {
     return this.each(function() {
-
+      var $this = $(this)
+        , data = $this.data('tidydaterange');
+      if (!data) $this.data('tidydaterange', (data = new Control(this, options)));
+      if (typeof options == 'string') return data[options].call(data);
     });
   }
 }(jQuery, window, document));

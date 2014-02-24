@@ -1,16 +1,17 @@
-body {
+.tdr-control {
+  float: right;
+  position: relative;
   font-family: Helvetica, Arial, sans-serif; }
-
-.date-range-picker {
-  position: relative; }
-  .date-range-picker.open a.dropdown-toggle {
+  .tdr-control a {
+    text-decoration: none; }
+  .tdr-control.open .tdr-dropdown {
     -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.18);
     -moz-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.18);
     box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.18);
     background: #dfebf5; }
-  .date-range-picker.open div.popover {
+  .tdr-control.open .tdr-popover {
     display: block; }
-  .date-range-picker a.dropdown-toggle {
+  .tdr-control .tdr-dropdown {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
@@ -40,14 +41,14 @@ body {
     color: #444;
     font-size: 14px;
     cursor: pointer; }
-    .date-range-picker a.dropdown-toggle span.arrow {
+    .tdr-control .tdr-dropdown span.arrow {
       position: absolute;
       right: 0;
       top: 0;
       bottom: 0;
       width: 30px;
       border-left: 1px solid #cfcfcf; }
-      .date-range-picker a.dropdown-toggle span.arrow::after {
+      .tdr-control .tdr-dropdown span.arrow::after {
         content: "";
         display: block;
         position: absolute;
@@ -60,7 +61,7 @@ body {
         border-bottom: 0;
         border-left: 6px solid transparent;
         border-right: 6px solid transparent; }
-  .date-range-picker div.popover {
+  .tdr-control .tdr-popover {
     -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.24);
     -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.24);
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.24);
@@ -80,7 +81,7 @@ body {
     background-color: rgba(255, 255, 255, 0.95);
     z-index: 1000;
     cursor: auto; }
-    .date-range-picker div.popover::before {
+    .tdr-control .tdr-popover::before {
       content: "";
       display: block;
       position: absolute;
@@ -93,7 +94,7 @@ body {
       border-top: 0;
       border-left: 12px solid transparent;
       border-right: 12px solid transparent; }
-    .date-range-picker div.popover::after {
+    .tdr-control .tdr-popover::after {
       content: "";
       display: block;
       position: absolute;
@@ -106,55 +107,64 @@ body {
       border-top: 0;
       border-left: 12px solid transparent;
       border-right: 12px solid transparent; }
-  .date-range-picker div.calendar-group {
+  .tdr-control .tdr-calendars {
     height: 196px; }
-    .date-range-picker div.calendar-group:before, .date-range-picker div.calendar-group:after {
+    .tdr-control .tdr-calendars:before, .tdr-control .tdr-calendars:after {
       content: "";
       display: table; }
-    .date-range-picker div.calendar-group:after {
+    .tdr-control .tdr-calendars:after {
       clear: both; }
-    .date-range-picker div.calendar-group {
+    .tdr-control .tdr-calendars {
       zoom: 1; }
-  .date-range-picker table.calendar {
+  .tdr-control .tdr-calendar {
     float: left;
     font-size: 11px;
     margin: 15px;
-    color: #555; }
-    .date-range-picker table.calendar tr th {
-      font-weight: bold;
-      text-align: center;
-      vertical-align: middle;
-      border-bottom: 1px solid #e6e6e6;
-      background-color: #f8f8f8; }
-      .date-range-picker table.calendar tr th.month {
-        height: 28px;
-        font-size: 13px;
-        vertical-align: top;
-        background-color: #fff; }
-    .date-range-picker table.calendar tr td {
-      width: 20px;
-      height: 20px;
-      text-align: center;
-      vertical-align: middle; }
-    .date-range-picker table.calendar tr a {
-      display: block;
-      width: 19px;
-      height: 19px;
-      line-height: 19px; }
-      .date-range-picker table.calendar tr a.selected {
-        background-color: #4477bd;
-        color: #fff; }
-      .date-range-picker table.calendar tr a.disabled {
-        color: #ccc;
-        cursor: default; }
-  .date-range-picker a.range-button {
+    color: #555;
+    border-collapse: separate;
+    border-spacing: 0; }
+    .tdr-control .tdr-calendar tr {
+      margin: 0;
+      padding: 0;
+      border: 0; }
+      .tdr-control .tdr-calendar tr th {
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
+        border-bottom: 1px solid #e6e6e6;
+        background-color: #f8f8f8; }
+        .tdr-control .tdr-calendar tr th.month {
+          height: 28px;
+          font-size: 13px;
+          vertical-align: top;
+          background-color: #fff; }
+      .tdr-control .tdr-calendar tr td {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        vertical-align: middle; }
+      .tdr-control .tdr-calendar tr a {
+        display: block;
+        width: 19px;
+        height: 19px;
+        line-height: 19px; }
+        .tdr-control .tdr-calendar tr a.selected {
+          background-color: #4477bd;
+          color: #fff; }
+        .tdr-control .tdr-calendar tr a.disabled {
+          color: #ccc;
+          cursor: default; }
+  .tdr-control .tdr-shift-button {
     position: absolute;
     top: 12px;
     padding: 0;
     font-size: 10px;
     width: 22px;
     height: 22px; }
-    .date-range-picker a.range-button::after {
+    .tdr-control .tdr-shift-button::after {
       content: "";
       display: block;
       position: absolute;
@@ -164,43 +174,96 @@ body {
       height: 0;
       border-top: 5px solid transparent;
       border-bottom: 5px solid transparent; }
-    .date-range-picker a.range-button.previous {
+    .tdr-control .tdr-shift-button.previous {
       left: 12px; }
-      .date-range-picker a.range-button.previous::after {
+      .tdr-control .tdr-shift-button.previous::after {
         right: 8px;
         border-right: 5px solid #999;
         border-left: 0; }
-    .date-range-picker a.range-button.next {
+    .tdr-control .tdr-shift-button.next {
       right: 12px; }
-      .date-range-picker a.range-button.next::after {
+      .tdr-control .tdr-shift-button.next::after {
         left: 8px;
         border-left: 5px solid #999;
         border-right: 0; }
-  .date-range-picker div.controls {
+  .tdr-control .tdr-controls {
     margin: 0 15px;
     padding: 15px 0;
     border-top: 1px solid #e0e0e0; }
-    .date-range-picker div.controls:before, .date-range-picker div.controls:after {
+    .tdr-control .tdr-controls:before, .tdr-control .tdr-controls:after {
       content: "";
       display: table; }
-    .date-range-picker div.controls:after {
+    .tdr-control .tdr-controls:after {
       clear: both; }
-    .date-range-picker div.controls {
+    .tdr-control .tdr-controls {
       zoom: 1; }
-    .date-range-picker div.controls div.range-inputs {
-      float: left; }
-      .date-range-picker div.controls div.range-inputs label {
-        display: block;
-        padding-bottom: 4px;
-        font-size: 13px;
-        color: #555; }
-      .date-range-picker div.controls div.range-inputs span.dash {
-        color: #999; }
-      .date-range-picker div.controls div.range-inputs input.date {
-        display: inline-block;
-        padding: 5px;
-        height: 30px;
-        width: 90px; }
-    .date-range-picker div.controls div.buttons {
-      padding-top: 24px;
-      float: right; }
+  .tdr-control .tdr-range-inputs {
+    float: left; }
+    .tdr-control .tdr-range-inputs label {
+      display: block;
+      padding-bottom: 4px;
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: bold;
+      color: #555; }
+    .tdr-control .tdr-range-inputs .tdr-dash {
+      margin: 0 2px;
+      color: #999; }
+    .tdr-control .tdr-range-inputs .tdr-date {
+      -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.16);
+      -moz-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.16);
+      box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.16);
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -ms-box-sizing: border-box;
+      box-sizing: border-box;
+      font-family: Helvetica, Arial, sans-serif;
+      display: inline-block;
+      padding: 5px;
+      height: 30px;
+      width: 90px;
+      font-size: 14px;
+      border: 1px solid #c4c4c4;
+      line-height: 1.5;
+      position: relative; }
+  .tdr-control .tdr-buttons {
+    padding-top: 24px;
+    float: right; }
+  .tdr-control .tdr-button {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    display: inline-block;
+    position: relative;
+    margin: 0;
+    padding: 4px 10px;
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 700;
+    cursor: pointer;
+    background: #e2e6e9;
+    background: -moz-linear-gradient(top, #e2e6e9 0%, #c5cacd 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #e2e6e9), color-stop(100%, #c5cacd));
+    background: -webkit-linear-gradient(top, #e2e6e9 0%, #c5cacd 100%);
+    background: -o-linear-gradient(top, #e2e6e9 0%, #c5cacd 100%);
+    background: -ms-linear-gradient(top, #e2e6e9 0%, #c5cacd 100%);
+    background: linear-gradient(to bottom, #e2e6e9 0%, #c5cacd 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$from', endColorstr='#ffffff',GradientType=0 );
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+    border: 1px solid #9b9b9b;
+    border-bottom-color: #747474;
+    color: #333; }
+    .tdr-control .tdr-button:active, .tdr-control .tdr-button.depressed {
+      -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.18);
+      -moz-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.18);
+      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.18);
+      background: #bec3c7; }
