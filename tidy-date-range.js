@@ -62,29 +62,29 @@
   Day.prototype = {
     constructor: Day
 
-    , daysFromNow: function(days) {
+  , daysFromNow: function(days) {
       var date = this.toDate();
       var time = date.getTime();
       newTime = time + (days * 86400000);
       return Day.fromDate(new Date(newTime));
     }
 
-    , toDate: function() {
+  , toDate: function() {
       return new Date(this.month.year, this.month.number - 1, this.number);
     }
 
-    , toString: function() {
+  , toString: function() {
       var year = this.month.year;
       var month = Day.pad(this.month.number);
       var day = Day.pad(this.number);
       return [year, month, day].join("-");
     }
 
-    , toHuman: function() {
+  , toHuman: function() {
       return Month.shortNames[this.month.number - 1] + " " + this.number + ", " + this.month.year;
     }
 
-    , toSlashed: function() {
+  , toSlashed: function() {
       return [this.month.number, this.number, this.month.year].join("/");
     }
   }
@@ -108,20 +108,20 @@
   Month.prototype = {
     constructor: Month
 
-    , name: function() {
+  , name: function() {
       return Month.names[this.number - 1] + " " + this.year;
     }
 
-    , shortName: function() {
+  , shortName: function() {
       return Month.shortNames[this.number - 1] + " " + this.year;
     }
 
-    , dayCount: function() {
+  , dayCount: function() {
       if (this.number == 2 && this.isLeapYear()) return 29;
       return this.dayCounts[this.number - 1];
     }
 
-    , isLeapYear: function() {
+  , isLeapYear: function() {
       return (
         this.year % 4 == 0 && this.year % 100 != 0
         ) || (
@@ -129,15 +129,15 @@
         );
     }
 
-    , firstDay: function() {
+  , firstDay: function() {
       return new Date(this.year, this.number - 1, 1);
     }
 
-    , firstDayOfTheWeek: function() {
+  , firstDayOfTheWeek: function() {
       return this.firstDay().getDay();
     }
 
-    , previous: function() {
+  , previous: function() {
       if (this.number == 1) {
         return new Month(this.year - 1, 12);
       } else {
@@ -145,7 +145,7 @@
       }
     }
 
-    , next: function() {
+  , next: function() {
       if (this.number == 12) {
         return new Month(this.year + 1, 1);
       } else {
@@ -162,7 +162,7 @@
   Calendar.prototype = {
     constructor: Calendar
 
-    , applyRange: function(range, isSelecting) {
+  , applyRange: function(range, isSelecting) {
       var now = Day.now().toDate();
 
       this.$el.find("[data-date]").each(function(index) {
@@ -185,11 +185,11 @@
       })
     }
 
-    , render: function() {
+  , render: function() {
       var day = 1,
-        weeks = "<tr>",
-        chrome = "",
-        date = "";
+          weeks = "<tr>",
+          chrome = "",
+          date = "";
 
       // Loop over weeks
       for (var i = 0; i <= 6; i++) {
@@ -225,7 +225,7 @@
       this.$el.html(chrome);
     }
 
-    , onSelect: function(handler) {
+  , onSelect: function(handler) {
       this.$el.on("click", "a[data-date]:not(.disabled)", function() {
         var day = Day.fromString($(this).data("date"));
         handler(day);
@@ -247,13 +247,13 @@
   DateRange.prototype = {
     constructor: DateRange
 
-    , isValid: function() {
+  , isValid: function() {
       if (this.from == undefined || this.to == undefined) return false;
       if (this.from.toDate() > this.to.toDate()) return false;
       return true;
     }
 
-    , includes: function(day) {
+  , includes: function(day) {
       if (!this.isValid()) return false;
       var date = day.toDate();
       return (this.from.toDate() <= date && this.to.toDate() >= date);
@@ -285,15 +285,15 @@
     this.$calendars = $("<div class='tdr-calendars'></div>");
     this.$controls = $(
       "<div class='tdr-controls'>" +
-      "<div class='tdr-range-inputs'>" +
-      "<label>Date Range</label>" +
-      "<input type='text' name='from' value='' class='tdr-date' />" +
-      "<span class='tdr-dash'>&mdash;</span>" +
-      "<input type='text' name='to' value='' class='tdr-date' />" +
-      "</div>" +
-      "<div class='tdr-buttons'>" +
-      "<a href='#' data-tidydaterange='apply' class='tdr-button'>Apply</a>" +
-      "</div>" +
+        "<div class='tdr-range-inputs'>" +
+          "<label>Date Range</label>" +
+          "<input type='text' name='from' value='' class='tdr-date' />" +
+          "<span class='tdr-dash'>&mdash;</span>" +
+          "<input type='text' name='to' value='' class='tdr-date' />" +
+        "</div>" +
+        "<div class='tdr-buttons'>" +
+          "<a href='#' data-tidydaterange='apply' class='tdr-button'>Apply</a>" +
+        "</div>" +
       "</div>"
     );
 
@@ -348,7 +348,7 @@
   Control.prototype = {
     constructor: Control
 
-    , renderCalendars: function() {
+  , renderCalendars: function() {
       var that = this
         , c3 = new Calendar(this.visibleMonth)
         , c2 = new Calendar(c3.month.previous())
@@ -387,7 +387,7 @@
       }
     }
 
-    , updateFrom: function(from) {
+  , updateFrom: function(from) {
       this.range.from = Day.fromDate(new Date(from));
       if (this.range.isValid()) {
         this.applyRange(this.range);
@@ -395,7 +395,7 @@
       }
     }
 
-    , updateTo: function(to) {
+  , updateTo: function(to) {
       this.range.to = Day.fromDate(new Date(to));
       if (this.range.isValid()) {
         this.applyRange(this.range);
@@ -403,7 +403,7 @@
       }
     }
 
-    , applyRange: function(range) {
+  , applyRange: function(range) {
       // Update calendars
       for (var i = 0; i < this.calendars.length; i++) {
         this.calendars[i].applyRange(this.range, this.isSelecting);
@@ -412,12 +412,12 @@
       // Update dropdown label
       this.$dropdown.html(
         "<span class='label'>" +
-        this.range.from.toHuman() + " &mdash; " + this.range.to.toHuman() +
+          this.range.from.toHuman() + " &mdash; " + this.range.to.toHuman() +
         "</span><span class='arrow'></span>"
       );
     }
 
-    , render: function() {
+  , render: function() {
       this.renderCalendars();
       this.applyRange();
       this.$parent.data("from", this.range.from.toString());
@@ -427,22 +427,22 @@
       return this;
     }
 
-    , setVisibleMonth: function(month) {
+  , setVisibleMonth: function(month) {
       this.visibleMonth = month;
       this.render();
     }
 
-    , shiftNext: function() {
+  , shiftNext: function() {
       this.setVisibleMonth(this.visibleMonth.next());
       return this;
     }
 
-    , shiftPrevious: function() {
+  , shiftPrevious: function() {
       this.setVisibleMonth(this.visibleMonth.previous());
       return this;
     }
 
-    , getRange: function() {
+  , getRange: function() {
       return this.range;
     }
   }
