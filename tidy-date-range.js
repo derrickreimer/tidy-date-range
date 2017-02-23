@@ -163,11 +163,12 @@
     constructor: Calendar
 
   , applyRange: function(range, isSelecting) {
-      var now = Day.now().toDate();
+      var now = Day.now().toDate(),
+          maxTo = range.from.daysFromNow(range.maxDays - 1).toDate();
 
       this.$el.find("[data-date]").each(function(index) {
         var $this = $(this);
-        var day = Day.fromString($this.data("date"))
+        var day = Day.fromString($this.data("date"));
 
         if (range.includes(day)) {
           $this.addClass("selected");
@@ -175,9 +176,9 @@
           $this.removeClass("selected");
         }
 
-        var date = day.toDate()
+        var date = day.toDate();
 
-        if (date > now || (isSelecting && date < range.from.toDate())) {
+        if (date > now || (isSelecting && (date < range.from.toDate() || date > maxTo))) {
           $this.addClass("disabled");
         } else {
           $this.removeClass("disabled");
@@ -234,14 +235,15 @@
     }
   }
 
-  var DateRange = function(from, to) {
+  var DateRange = function(from, to, maxDays) {
     this.from = from;
     this.to = to;
+    this.maxDays = maxDays;
   }
 
   DateRange.default = function() {
     var now = Day.now();
-    return new DateRange(now.daysFromNow(-30), now);
+    return new DateRange(now.daysFromNow(-30), now, 366);
   }
 
   DateRange.prototype = {
@@ -250,6 +252,7 @@
   , isValid: function() {
       if (this.from == undefined || this.to == undefined) return false;
       if (this.from.toDate() > this.to.toDate()) return false;
+      if (this.maxDays && this.to.toDate() > this.from.daysFromNow(this.maxDays).toDate()) return false;
       return true;
     }
 
@@ -268,7 +271,8 @@
 
     range = new DateRange(
       Day.fromString(this.options.from),
-      Day.fromString(this.options.to)
+      Day.fromString(this.options.to),
+      this.options.maxDays
     )
 
     this.range = range.isValid() ? range : DateRange.default();
@@ -313,7 +317,7 @@
       that.$el.removeClass("open");
     });
 
-    $("body").on("click.tidydaterange", ".tdr-popover", function(e) { 
+    $("body").on("click.tidydaterange", ".tdr-popover", function(e) {
       e.stopPropagation();
     });
 
@@ -327,6 +331,14 @@
     this.$next.on("click", function() {
       that.shiftNext();
       return false;
+    });
+
+    this.$el.on("change", "input[name='from']", function(e) {
+      that.updateFrom(e.currentTarget.value);
+    });
+
+    this.$el.on("change", "input[name='to']", function(e) {
+      that.updateTo(e.currentTarget.value);
     });
 
     this.$el.on("click", "[data-tidydaterange='apply']", function() {
@@ -376,6 +388,22 @@
       this.$calendars.html("");
       for (var i = 0; i < this.calendars.length; i++) {
         this.$calendars.append(this.calendars[i].$el);
+      }
+    }
+
+  , updateFrom: function(from) {
+      this.range.from = Day.fromDate(new Date(from));
+      if (this.range.isValid()) {
+        this.applyRange(this.range);
+        this.$parent.data("from", this.range.from.toString());
+      }
+    }
+
+  , updateTo: function(to) {
+      this.range.to = Day.fromDate(new Date(to));
+      if (this.range.isValid()) {
+        this.applyRange(this.range);
+        this.$parent.data("to", this.range.to.toString());
       }
     }
 
