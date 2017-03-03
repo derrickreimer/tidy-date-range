@@ -96,12 +96,12 @@
   }
 
   Month.names = [
-    'January', 'February', 'March', 'April', 'May', 'June', 
+    'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
   Month.shortNames = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
     'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'
   ];
 
@@ -124,9 +124,9 @@
   , isLeapYear: function() {
       return (
         this.year % 4 == 0 && this.year % 100 != 0
-      ) || (
+        ) || (
         this.year % 400 == 0
-      );
+        );
     }
 
   , firstDay: function() {
@@ -187,9 +187,9 @@
     }
 
   , render: function() {
-      var day = 1, 
-          weeks = "<tr>", 
-          chrome = "", 
+      var day = 1,
+          weeks = "<tr>",
+          chrome = "",
           date = "";
 
       // Loop over weeks
@@ -203,7 +203,7 @@
             weeks += "<a href='#' data-date='"+ date + "'>" + day + "</a>";
             day++;
           }
-          
+
           weeks += "</td>";
         }
 
@@ -415,7 +415,7 @@
 
       // Update dropdown label
       this.$dropdown.html(
-        "<span class='label'>" + 
+        "<span class='label'>" +
           this.range.from.toHuman() + " &mdash; " + this.range.to.toHuman() +
         "</span><span class='arrow'></span>"
       );
